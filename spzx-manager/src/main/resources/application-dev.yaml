@@ -1,0 +1,55 @@
+#  application-dev.yml文件内容============================
+# 配置服务端口号
+server:
+  port: 8080
+
+# 配置数据库连接信息
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_spzx?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+  # Redis的相关配置
+  data:
+    redis:
+      host: 192.168.5.17
+      port: 6379
+      #password: 1234
+      # 配置客户端类型。默认是lettuce
+      client-type: lettuce
+      # 设置lettuce的底层参数
+      lettuce:
+        pool:
+          # 1. 启用Lettuce连接池
+          enabled: true
+          # 2. 连接池中允许的最大活动连接数
+          max-active: 8
+          # 3. 连接池中允许的最大空闲连接数
+          max-idle: 5
+          # 4. 获取连接时的最大等待时间(ms)
+          max-wait: 100
+
+# mybatis的配置
+mybatis:
+  mapper-locations: classpath:/mapper/*/*.xml
+  type-aliases-package: com.koko.spzx.model
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+# pagehelper分页插件
+pagehelper:
+  helper-dialect: mysql      # 数据库方言
+  reasonable: true           # 分页合理化，智能修正超出范围的分页页码
+  support-methods-arguments: true #自动从方法参数中提取分页参数，不需要手动调用 PageHelper.startPage()
+  params: count=countSql    # COUNT查询优化，提升查询性能
+
+
+# 输出redis日志
+logging:
+  level:
+    org.springframework.data.redis: DEBUG
+    io.lettuce.core: DEBUG
