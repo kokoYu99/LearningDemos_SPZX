@@ -1,17 +1,19 @@
 package com.koko.spzx.config;
 
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
+@SpringBootConfiguration
 public class RedisTemplateConfig {
 
     /**
      * 创建RedisTemplate组件，同时配置序列化器
      *
-     * @param redisConnectionFactory
+     * @param redisConnectionFactory 连接工厂对象
      * @return RedisTemplate
      */
     @Bean
