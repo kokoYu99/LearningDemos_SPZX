@@ -8,8 +8,8 @@ import com.koko.spzx.model.vo.system.LoginVo;
 import com.koko.spzx.model.vo.system.ValidateCodeVo;
 import com.koko.spzx.service.SysUserService;
 import com.koko.spzx.service.ValidateCodeService;
+import com.koko.spzx.util.AuthContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,9 +25,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("admin/system/index")
 public class IndexController {
+    private final SysUserService sysUserService;
+    private final ValidateCodeService validateCodeService;
 
-    @Autowired
-    private SysUserService sysUserService;
+    /* 使用构造器注入 */
+    public IndexController(SysUserService sysUserService, ValidateCodeService validateCodeService) {
+        this.sysUserService = sysUserService;
+        this.validateCodeService = validateCodeService;
+    }
 
     /* 用户登录 */
     @PostMapping("/login")
@@ -50,8 +55,6 @@ public class IndexController {
         return Result.build(loginVo, ResultCodeEnum.SUCCESS);
     }
 
-    @Autowired
-    private ValidateCodeService validateCodeService;
     /* 获取验证码接口 */
     @GetMapping("/generateValidateCode")
     @Operation(description = "获取验证码")
@@ -60,15 +63,23 @@ public class IndexController {
         return Result.build(vo, ResultCodeEnum.SUCCESS);
     }
 
-    /* 登录后，获取用户信息接口 */
+    /* 登录后，获取用户信息接口
+    * 优化版：直接从threadLocal中获取SysUser，无需再次查询redis
+    * */
     @GetMapping("/userinfo")
-    public Result getUserInfo(@RequestHeader(name = "token") String token) {
-        SysUser sysUser = sysUserService.getUserInfo(token);
+    public Result getUserInfo() {
+        SysUser sysUser = AuthContextUtil.get();
         return Result.build(sysUser, ResultCodeEnum.SUCCESS);
     }
+//    /* 登录后，获取用户信息接口 */
+//    @GetMapping("/userinfo")
+//    public Result getUserInfo(@RequestHeader(name = "token") String token) {
+//        SysUser sysUser = sysUserService.getUserInfo(token);
+//        return Result.build(sysUser, ResultCodeEnum.SUCCESS);
+//    }
 
     @GetMapping("/logout")
-    public Result logout(@RequestHeader(name="token") String token){
+    public Result logout(@RequestHeader(name = "token") String token) {
         sysUserService.logout(token);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }

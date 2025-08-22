@@ -3,14 +3,20 @@
 server:
   port: 8080
 
-# 配置数据库连接信息
+
 spring:
+  # 配置数据库连接信息
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_spzx?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
+  # 设置时区
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
 
   # Redis的相关配置
   data:
@@ -44,7 +50,7 @@ mybatis:
 pagehelper:
   helper-dialect: mysql      # 数据库方言
   reasonable: true           # 分页合理化，智能修正超出范围的分页页码
-  support-methods-arguments: true #自动从方法参数中提取分页参数，不需要手动调用 PageHelper.startPage()
+#  support-methods-arguments: true # 自动从方法参数中提取分页参数，不需要手动调用 PageHelper.startPage()
   params: count=countSql    # COUNT查询优化，提升查询性能
 
 
@@ -53,3 +59,10 @@ logging:
   level:
     org.springframework.data.redis: DEBUG
     io.lettuce.core: DEBUG
+
+# 无需拦截器前置拦截进行登录校验的url
+spzx:
+  auth:
+    no-auth-urls:
+      - /admin/system/index/login
+      - /admin/system/index/generateValidateCode

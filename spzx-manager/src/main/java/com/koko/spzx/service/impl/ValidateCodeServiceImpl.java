@@ -14,9 +14,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ValidateCodeServiceImpl implements ValidateCodeService {
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
+    public ValidateCodeServiceImpl(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public ValidateCodeVo generateValiCode() {

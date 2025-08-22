@@ -13,7 +13,18 @@ public class GlobalExceptionHandler {
     public Result handleLoginException(LoginException e) {
         //从方法参数中获取异常对象
         //后端打印异常码和异常信息
-        System.out.println(e.getCode() + " : " + e.getMessage());
+        System.out.println(e.getCode() + " : " + e.getMessage()+ " : " + "LoginException");
+
+        //返回统一结果对象，封装异常对象中的ResultCodeEnum
+        return Result.build(null, e.getResultCodeEnum());
+    }
+
+    /* 处理角色异常 */
+    @ExceptionHandler(RoleException.class)
+    public Result handleRoleException(RoleException e) {
+        //从方法参数中获取异常对象
+        //后端打印异常码和异常信息
+        System.out.println(e.getCode() + " : " + e.getMessage() + " : " + "RoleException");
 
         //返回统一结果对象，封装异常对象中的ResultCodeEnum
         return Result.build(null, e.getResultCodeEnum());

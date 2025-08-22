@@ -23,11 +23,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    @Autowired
-    private SysUserMapper mapper;
+    private final SysUserMapper mapper;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    public SysUserServiceImpl(SysUserMapper mapper, RedisTemplate<String, String> redisTemplate) {
+        this.mapper = mapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     /* 登录 */
     @Override

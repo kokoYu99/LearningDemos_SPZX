@@ -1,7 +1,7 @@
 package com.koko.spzx.config;
 
 import com.koko.spzx.interceptor.AuthContextInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.koko.spzx.properties.AuthContextProperties;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,16 +10,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootConfiguration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private AuthContextInterceptor authContextInterceptor;
+    //注入配置读取类，包含配置文件中要排除的路径
+    private final AuthContextProperties authContextProperties;
+    //注入登录校验拦截器
+    private final AuthContextInterceptor authContextInterceptor;
+
+    /* 构造器注入 */
+    public WebMvcConfig(AuthContextProperties authContextProperties, AuthContextInterceptor authContextInterceptor) {
+        this.authContextProperties = authContextProperties;
+        this.authContextInterceptor = authContextInterceptor;
+    }
 
     /* 注册拦截器 */
-    @Override
+/*    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authContextInterceptor) //添加指定拦截器
-                .excludePathPatterns("admin/system/index/generateValidateCode", "admin/system/index/login") //指定要排除的路径
+                .excludePathPatterns(authContextProperties.getNoAuthUrls()) //优化：使用配置参数，指定要排除的路径
+//                .excludePathPatterns("/admin/system/index/login","/admin/system/index/generateValidateCode")
                 .addPathPatterns("/**"); //指定要拦截的路径
-    }
+    }*/
 
     /* CORS跨域设置 */
     @Override

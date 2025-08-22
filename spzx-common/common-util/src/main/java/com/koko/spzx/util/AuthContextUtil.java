@@ -14,8 +14,8 @@ public class AuthContextUtil {
     }
 
     /* 取数据的方法 */
-    public static void get() {
-        SysUser sysUser = threadLocal.get();
+    public static SysUser get() {
+        return threadLocal.get();
     }
 
     /* 移除数据的方法 */
