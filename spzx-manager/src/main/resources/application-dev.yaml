@@ -50,19 +50,34 @@ mybatis:
 pagehelper:
   helper-dialect: mysql      # 数据库方言
   reasonable: true           # 分页合理化，智能修正超出范围的分页页码
-#  support-methods-arguments: true # 自动从方法参数中提取分页参数，不需要手动调用 PageHelper.startPage()
+  #  support-methods-arguments: true # 自动从方法参数中提取分页参数，不需要手动调用 PageHelper.startPage()
   params: count=countSql    # COUNT查询优化，提升查询性能
 
 
-# 输出redis日志
+# 日志级别
 logging:
   level:
+    # 输出redis日志
     org.springframework.data.redis: DEBUG
     io.lettuce.core: DEBUG
+    # 输出mybatis日志
+    org.mybatis: TRACE
+    org.apache.ibatis: TRACE
+    # 输出 SQL 语句和参数的 DEBUG 级别日志
+    java.sql: DEBUG
+    com.example.mapper: DEBUG
 
-# 无需拦截器前置拦截进行登录校验的url
+
+
 spzx:
+  # 登录校验，指定无需拦截器前置拦截进行登录校验的接口的url
   auth:
     no-auth-urls:
       - /admin/system/index/login
       - /admin/system/index/generateValidateCode
+  # 配置minio的url和账号密码
+  minio:
+    endpointUrl: http://127.0.0.1:9000
+    accessKey: admin
+    secretKey: admin123456
+    bucketName: spzx-img

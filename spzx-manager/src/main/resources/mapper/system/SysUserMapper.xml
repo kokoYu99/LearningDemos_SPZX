@@ -6,15 +6,80 @@
 <mapper namespace="com.koko.spzx.mapper.SysUserMapper">
 
     <sql id="columns">
-        id,username userName ,password,name,phone,avatar,description,status,create_time,update_time,is_deleted
+        id, username, password, name, phone, avatar, description, status, create_time, update_time, is_deleted
     </sql>
 
-<!--    SysUser findUserByUsername(String username);-->
+    <!--    SysUser findUserByUsername(String username);-->
     <select id="findUserByUsername" resultType="com.koko.spzx.model.entity.system.SysUser">
-        SELECT <include refid="columns"/>
+        SELECT
+        <include refid="columns"/>
         FROM `sys_user`
         WHERE username=#{username}
     </select>
+
+    <!--    List<SysUser> findByPage(SysUserDto sysUserDto);  -->
+    <!-- 在dev.yaml中配置了实体类别名type-aliases-package，resultType可以使用别名 -->
+    <select id="findByPage" resultType="sysUser">
+        SELECT
+        <include refid="columns"/>
+        FROM `sys_user`
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%'"/>
+                username LIKE #{pattern} or
+                name LIKE #{pattern} or
+                phone LIKE #{pattern}
+            </if>
+            <if test="createTimeBegin != null and createTimeBegin != ''">
+                and create_time &gt;= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                and create_time &lt;= #{createTimeEnd}
+            </if>
+            and is_deleted = 0
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <!--  int insert(SysUser sysUser);  -->
+    <insert id="insert">
+        INSERT INTO `sys_user` (username, password, name, phone, avatar, description, status)
+        VALUES (#{username}, #{password}, #{name}, #{phone}, #{avatar}, #{description}, #{status})
+    </insert>
+
+    <!--  int update(SysUser sysUser);  -->
+    <update id="update">
+        UPDATE `sys_user`
+        <set>
+            <if test="username!=null and username!=''">
+                username=#{username},
+            </if>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="avatar!=null and avatar!=''">
+                avatar=#{avatar},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            update_time=NOW(),
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--  int delete(Long userId);  -->
+    <update id="delete">
+        UPDATE `sys_user`
+        SET
+        is_deleted=1,
+        status=0,
+        update_time=NOW()
+        WHERE id=#{id}
+    </update>
 
 
 </mapper>

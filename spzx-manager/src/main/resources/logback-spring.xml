@@ -46,6 +46,10 @@
     <springProfile name="dev">
         <!-- com.koko日志记录器：业务程序INFO级别  -->
         <logger name="com.koko" level="INFO" />
+<!--        <logger name="org.mybatis" level="DEBUG" />-->
+<!--        <logger name="org.apache.ibatis" level="DEBUG" />-->
+<!--        <logger name="java.sql" level="DEBUG" />-->
+
         <!-- 根日志记录器：INFO级别  -->
         <root level="INFO">
             <appender-ref ref="CONSOLE" />

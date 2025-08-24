@@ -3,9 +3,15 @@ package com.koko.spzx.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.koko.spzx.exception.LoginException;
+import com.koko.spzx.exception.SysUserException;
 import com.koko.spzx.mapper.SysUserMapper;
 import com.koko.spzx.model.dto.system.LoginDto;
+import com.koko.spzx.model.dto.system.SysUserDto;
+import com.koko.spzx.model.dto.system.SysUserDto;
+import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.vo.common.ResultCodeEnum;
 import com.koko.spzx.model.vo.system.LoginVo;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +37,8 @@ public class SysUserServiceImpl implements SysUserService {
         this.mapper = mapper;
         this.redisTemplate = redisTemplate;
     }
+
+    /* ---------------用户登录/退出登录------------------ */
 
     /* 登录 */
     @Override
@@ -55,8 +64,10 @@ public class SysUserServiceImpl implements SysUserService {
 
     }
 
-    /* 登录后，获取用户信息 */
-    @Override
+    /* 登录后，获取用户信息
+     * 优化：IndexController的getUserInfo()可以直接从ThreadLocal中获取用户信息，无需再调此方法
+     *  */
+/*    @Override
     public SysUser getUserInfo(String token) {
 
         //根据token，从redis获取用户信息
@@ -74,7 +85,7 @@ public class SysUserServiceImpl implements SysUserService {
 
         throw new LoginException(ResultCodeEnum.DATA_ERROR);
 
-    }
+    }*/
 
     /* 退出登录 */
     @Override
@@ -135,6 +146,63 @@ public class SysUserServiceImpl implements SysUserService {
 
         //返回vo对象
         return loginVo;
+    }
+
+    /*-------------------------用户CRUD-------------------------*/
+    /* 查询用户 */
+    @Override
+    public PageInfo<SysUser> findByPage(SysUserDto SysUserDto, Integer pageNum, Integer pageSize) {
+
+        //设置分页参数
+        PageHelper.startPage(pageNum, pageSize);
+
+        //根据dto中的角色名称，查询角色
+        List<SysUser> SysUserList = mapper.findByPage(SysUserDto);
+
+        //返回分页后的数据
+        PageInfo<SysUser> pageInfo = new PageInfo<>(SysUserList);
+
+        return pageInfo;
+    }
+
+    /* 新增用户 */
+    @Override
+    public void insert(SysUser sysUser) {
+        //1. 判断username是否已占用
+        SysUser dbSysUser = mapper.findUserByUsername(sysUser.getUsername());
+
+        //2.1 如果用户存在，说明已占用，抛异常
+        if (dbSysUser != null) {
+            throw new SysUserException(ResultCodeEnum.USER_NAME_IS_EXISTS);
+        }
+
+        //2.2 如果未占用，对密码加密MD5(Spring的DigestUtils工具)
+        String md5Password = DigestUtils.md5DigestAsHex(sysUser.getPassword().getBytes());
+        sysUser.setPassword(md5Password); //存入加密后的密码
+        sysUser.setStatus(1); //1正常 0停用
+
+        //3. 将用户存入数据库
+        int insert = mapper.insert(sysUser);
+        if (insert != 1) {
+            throw new SysUserException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+    }
+
+    /* 修改用户 */
+    @Override
+    public void update(SysUser sysUser) {
+        int update = mapper.update(sysUser);
+        if (update != 1) {
+            throw new SysUserException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public void delete(Long UserId) {
+        int delete = mapper.delete(UserId);
+        if (delete != 1) {
+            throw new SysUserException(ResultCodeEnum.SYSTEM_ERROR);
+        }
     }
 
 }
