@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result handleException(Exception e) {
         logger.error("捕获到全局异常：" + e.getCause());
+        logger.error(String.valueOf(e));
         return Result.build(null, ResultCodeEnum.SYSTEM_ERROR);
     }
 
