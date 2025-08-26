@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.SysMenuMapper">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        id, parent_id, title, component, sort_value, status, create_time, update_time, is_deleted
+    </sql>
+
+    <!--List<SysMenu> findAllMenuNodes();-->
+    <select id="findAllMenuNodes" resultType="com.koko.spzx.model.entity.system.SysMenu">
+        SELECT
+        <include refid="columns"/>
+        FROM `sys_menu`
+        WHERE is_deleted=0
+        ORDER BY sort_value
+    </select>
+
+
+    <!--  int insert(SysMenu sysMenu); -->
+    <!-- 生成主键值 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `sys_menu` (parent_id, title, component, sort_value, status)
+        VALUES (#{parentId}, #{title}, #{component}, #{sortValue}, #{status})
+    </insert>
+
+    <!--  int update(SysMenu sysMenu); -->
+    <update id="update">
+        UPDATE `sys_menu`
+        <set>
+            <if test="parentId!=null and parentId!=''">
+                parent_id = #{parentId},
+            </if>
+            <if test="title!=null and title!=''">
+                title = #{title},
+            </if>
+            <if test="component!=null and component!=''">
+                component = #{component},
+            </if>
+            <if test="sortValue!=null and sortValue!=''">
+                sort_value = #{sortValue},
+            </if>
+            <if test="status!=null and status!=''">
+                status = #{status},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <!-- int delete(Long menuId); -->
+    <update id="delete">
+        UPDATE `sys_menu`
+        SET is_deleted=1, update_time=NOW()
+        WHERE id=#{id}
+    </update>
+
+    <!-- Integer countChildMenu(Long menuId); -->
+    <select id="countChildMenu" resultType="integer">
+        SELECT COUNT(*) FROM sys_menu WHERE parent_id=#{menuId} and is_deleted=0
+    </select>
+
+</mapper>

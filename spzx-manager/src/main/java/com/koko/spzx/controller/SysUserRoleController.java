@@ -18,10 +18,10 @@ public class SysUserRoleController {
         this.service = service;
     }
 
-    /* 分配角色的弹框中，获取所有角色 */
-    @GetMapping("/findAllRoles")
-    public Result findAllRoles(){
-        HashMap<String, Object> map= service.findAllRoles();
+    /* 分配角色的弹框中，获取所有角色，回显用户已有角色 */
+    @GetMapping("/findAllRoles/{userId}")
+    public Result findAllRoles(@PathVariable Long userId){
+        HashMap<String, Object> map= service.findAllRoles(userId);
         return Result.build(map, ResultCodeEnum.SUCCESS);
     }
 

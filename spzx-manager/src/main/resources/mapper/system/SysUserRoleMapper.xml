@@ -10,6 +10,11 @@
         SELECT id, role_name FROM `sys_role`
     </select>
 
+    <!--    List<Long> findRolesByUserId(Long userId);-->
+    <select id="findRolesByUserId" resultType="long">
+        SELECT role_id FROM `sys_user_role` WHERE user_id=#{userId}
+    </select>
+
     <!-- int setUserRole(Long userId, Long roleId); -->
     <insert id="setUserRole">
         INSERT INTO `sys_user_role`(user_id, role_id)

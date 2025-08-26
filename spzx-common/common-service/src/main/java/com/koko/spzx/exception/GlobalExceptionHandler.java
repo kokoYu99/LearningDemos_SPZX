@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     public Result handleRoleException(SysRoleException e) {
         //从方法参数中获取异常对象
         //后端打印异常码和异常信息
-        logger.error("捕获到用户异常：" + e);
+        logger.error("捕获到角色异常：" + e);
 
         //返回统一结果对象，封装异常对象中的ResultCodeEnum
         return Result.build(null, e.getResultCodeEnum());
@@ -40,6 +40,17 @@ public class GlobalExceptionHandler {
         //从方法参数中获取异常对象
         //后端打印异常码和异常信息
         logger.error("捕获到用户异常：" + e);
+
+        //返回统一结果对象，封装异常对象中的ResultCodeEnum
+        return Result.build(null, e.getResultCodeEnum());
+    }
+
+    /* 处理菜单异常 */
+    @ExceptionHandler(SysMenuException.class)
+    public Result handleSysMenuException(SysMenuException e) {
+        //从方法参数中获取异常对象
+        //后端打印异常码和异常信息
+        logger.error("捕获到菜单异常：" + e);
 
         //返回统一结果对象，封装异常对象中的ResultCodeEnum
         return Result.build(null, e.getResultCodeEnum());

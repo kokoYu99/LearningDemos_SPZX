@@ -9,7 +9,7 @@ public enum ResultCodeEnum {
     LOGIN_ERROR(201, "用户名或者密码错误"),
     VALIDATECODE_ERROR(202, "验证码错误"),
     LOGOUT_ERROR(203,"退出失败，请稍后再试"),
-    DATA_ERROR(204, "数据获取异常"),
+    DATA_ERROR(204, "数据异常"),
     LOGIN_AUTH(208, "用户未登录，请重新登录"),
     USER_NAME_IS_EXISTS(209, "用户名已经存在"),
     ACCOUNT_STOP(216, "账号已停用"),
@@ -22,7 +22,7 @@ public enum ResultCodeEnum {
     private Integer code;      // 业务状态码
     private String message;    // 响应消息
 
-    private ResultCodeEnum(Integer code, String message) {
+    ResultCodeEnum(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

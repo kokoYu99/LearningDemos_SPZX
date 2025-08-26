@@ -29,6 +29,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         String captchaCode = captcha.getCode();
         String imageBase64 = captcha.getImageBase64();
 
+
         //2. 将验证码存入redis中。key为唯一值，使用uuid；value为验证码
         String redis_key = "user:login:captcha:" + UUID.randomUUID().toString().replace("-", "");
         redisTemplate.opsForValue().set(redis_key, captchaCode, 5, TimeUnit.MINUTES);

@@ -14,5 +14,5 @@ public interface SysUserRoleMapper {
 
     int setUserRole(Long userId, Long roleId); //@Param可以省略，只要参数名和sql中的一致
 
-
+    List<Long> findRolesByUserId(Long userId);
 }

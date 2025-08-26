@@ -43,7 +43,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 System.out.println("Bucket 'spzx-img' already exists.");
             }
 
-            //设置文件名称: "年月日/UUID"
+            //设置文件名称: "年月日/UUID"，使用hutool依赖的DateUtil工具
             String dateDir = DateUtil.format(new Date(), "yyyyMMdd");
             String uuid = UUID.randomUUID().toString().replace("-", "");
             //生成最终的文件名称
