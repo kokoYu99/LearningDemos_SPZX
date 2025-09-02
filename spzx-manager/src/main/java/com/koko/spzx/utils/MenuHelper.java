@@ -29,19 +29,19 @@ public class MenuHelper {
 
     /* 递归的条件+过程 */
     private static SysMenu findChildren(SysMenu sysMenu, List<SysMenu> treeNodes) {
-        //构建空的子菜单集合
+        //1. 构建当前菜单项的子菜单集合
         sysMenu.setChildren(new ArrayList<>());
 
-        //获取所有子菜单
+        //2. 获取当前菜单项的所有子菜单
+        //如果集合中有菜单项的parentId与当前菜单项id相等(即子菜单)，就将其放入子菜单集合中
         for (SysMenu treeNode : treeNodes) {
-            //如果集合中的菜单项的parentId==当前菜单项，将其加入当前菜单项的子菜单集合中
             if (sysMenu.getId().longValue() == treeNode.getParentId().longValue()) {
-                //递归，下一层菜单项重复此方法的逻辑
+                //递归，下一层菜单项重复此方法的逻辑，即让子菜单找到自己的所有子菜单，并将自己返回
                 sysMenu.getChildren().add(findChildren(treeNode, treeNodes));
             }
         }
 
-        //返回菜单项
+        //返回当前菜单项。其中应包括所有子菜单的集合
         return sysMenu;
     }
 

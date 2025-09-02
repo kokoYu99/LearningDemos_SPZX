@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.CategoryBrandMapper">
+
+    <!--  List<CategoryBrand> findByPage(CategoryBrandDto categoryBrandDto);  -->
+    <select id="findByPage" resultType="com.koko.spzx.model.entity.product.CategoryBrand">
+        SELECT
+        cb.id, cb.brand_id, cb.category_id, cb.create_time, cb.update_time,
+        c.name as categoryName,
+        b.name as brandName, b.logo
+        FROM category_brand cb
+        JOIN category c ON cb.category_id=c.id
+        JOIN brand b ON cb.brand_id = b.id
+        <where>
+            <if test="brandId!=null and brandId!=''">
+                cb.brand_id=#{brandId} and
+            </if>
+            <if test="categoryId!=null and categoryId!=''">
+                cb.category_id=#{categoryId} and
+            </if>
+            cb.is_deleted=0
+        </where>
+        ORDER BY cb.id DESC
+    </select>
+
+    <!--    int insertCategoryBrand(CategoryBrand categoryBrand);  -->
+    <insert id="insertCategoryBrand">
+        INSERT INTO `category_brand` (brand_id, category_id) VALUES (#{brandId}, #{categoryId})
+    </insert>
+
+    <!--
+    int updateCategoryBrandById(CategoryBrand categoryBrand);
+    -->
+    <update id="updateCategoryBrandById">
+        UPDATE `category_brand`
+        <set>
+            <if test="brandId!=null and brandId!=''">
+                brand_id=#{brandId},
+            </if>
+            <if test="categoryId!=null and categoryId!=''">
+                category_id=#{categoryId},
+            </if>
+            update_time=NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <!--  int deleteCategoryBrandById(Long id); -->
+    <update id="deleteCategoryBrandById">
+        UPDATE `category_brand`
+        SET is_deleted=1 , update_time=NOW()
+        WHERE id=#{id}
+    </update>
+
+
+</mapper>

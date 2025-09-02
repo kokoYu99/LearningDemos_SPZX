@@ -24,7 +24,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!-- 临界值过滤器 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -46,9 +46,10 @@
     <springProfile name="dev">
         <!-- com.koko日志记录器：业务程序INFO级别  -->
         <logger name="com.koko" level="INFO" />
-<!--        <logger name="org.mybatis" level="DEBUG" />-->
-<!--        <logger name="org.apache.ibatis" level="DEBUG" />-->
-<!--        <logger name="java.sql" level="DEBUG" />-->
+        <logger name="com.koko.spzx.mapper" level="DEBUG" />
+        <logger name="org.mybatis" level="DEBUG" />
+        <logger name="org.apache.ibatis" level="DEBUG" />
+        <logger name="java.sql" level="DEBUG" />
 
         <!-- 根日志记录器：INFO级别  -->
         <root level="INFO">

@@ -19,6 +19,14 @@
         ORDER BY sort_value
     </select>
 
+    <!-- SysMenu findMenuById(Long menuId); -->
+    <select id="findMenuById" resultType="com.koko.spzx.model.entity.system.SysMenu">
+        SELECT
+        <include refid="columns"/>
+        FROM `sys_menu`
+        WHERE id=#{menuId} and is_deleted=0
+    </select>
+
 
     <!--  int insert(SysMenu sysMenu); -->
     <!-- 生成主键值 -->
@@ -61,6 +69,15 @@
     <!-- Integer countChildMenu(Long menuId); -->
     <select id="countChildMenu" resultType="integer">
         SELECT COUNT(*) FROM sys_menu WHERE parent_id=#{menuId} and is_deleted=0
+    </select>
+
+    <!--    List<SysMenu> findUserMenuList(Long userId);  -->
+    <select id="findUserMenuList" resultType="com.koko.spzx.model.entity.system.SysMenu">
+        SELECT DISTINCT m.*
+        FROM sys_menu m
+        JOIN sys_role_menu rm ON m.id=rm.menu_id
+        JOIN sys_user_role ur ON rm.role_id=ur.role_id
+        WHERE ur.user_id=#{userId} and m.is_deleted=0;
     </select>
 
 </mapper>

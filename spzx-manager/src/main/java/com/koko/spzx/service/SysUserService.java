@@ -5,7 +5,10 @@ import com.koko.spzx.model.dto.system.LoginDto;
 import com.koko.spzx.model.dto.system.SysUserDto;
 import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.vo.system.LoginVo;
+import com.koko.spzx.model.vo.system.SysMenuVo;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 public interface SysUserService {
     LoginVo login(LoginDto loginDto);
@@ -21,4 +24,6 @@ public interface SysUserService {
     void update(SysUser sysUser);
 
     void delete(Long userId);
+
+
 }

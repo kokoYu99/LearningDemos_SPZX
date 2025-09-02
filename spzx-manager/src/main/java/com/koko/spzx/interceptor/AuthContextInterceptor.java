@@ -32,7 +32,7 @@ public class AuthContextInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //1. 从请求头中获取请求方式。
         //如果是预检请求，直接放行
         if ("OPTIONS".equals(request.getMethod())) {

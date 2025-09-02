@@ -5,12 +5,16 @@ import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.vo.common.Result;
 import com.koko.spzx.model.vo.common.ResultCodeEnum;
 import com.koko.spzx.model.vo.system.LoginVo;
+import com.koko.spzx.model.vo.system.SysMenuVo;
 import com.koko.spzx.model.vo.system.ValidateCodeVo;
+import com.koko.spzx.service.SysMenuService;
 import com.koko.spzx.service.SysUserService;
 import com.koko.spzx.service.ValidateCodeService;
 import com.koko.spzx.util.AuthContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /*
@@ -26,11 +30,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("admin/system/index")
 public class IndexController {
     private final SysUserService sysUserService;
+    private final SysMenuService sysMenuService;
     private final ValidateCodeService validateCodeService;
 
     /* 使用构造器注入 */
-    public IndexController(SysUserService sysUserService, ValidateCodeService validateCodeService) {
+    public IndexController(SysUserService sysUserService, SysMenuService sysMenuService, ValidateCodeService validateCodeService) {
         this.sysUserService = sysUserService;
+        this.sysMenuService = sysMenuService;
         this.validateCodeService = validateCodeService;
     }
 
@@ -82,6 +88,13 @@ public class IndexController {
     public Result logout(@RequestHeader(name = "token") String token) {
         sysUserService.logout(token);
         return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    /* 动态菜单：显示用户可以操作的菜单 */
+    @GetMapping("/menus")
+    public Result menus() {
+        List<SysMenuVo> sysMenuVoList = sysMenuService.findUserMenuList();
+        return Result.build(sysMenuVoList, ResultCodeEnum.SUCCESS);
     }
 
 }

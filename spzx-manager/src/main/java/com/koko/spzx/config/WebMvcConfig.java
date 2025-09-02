@@ -22,13 +22,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /* 注册拦截器 */
-/*    @Override
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authContextInterceptor) //添加指定拦截器
                 .excludePathPatterns(authContextProperties.getNoAuthUrls()) //优化：使用配置参数，指定要排除的路径
 //                .excludePathPatterns("/admin/system/index/login","/admin/system/index/generateValidateCode")
                 .addPathPatterns("/**"); //指定要拦截的路径
-    }*/
+    }
 
     /* CORS跨域设置 */
     @Override

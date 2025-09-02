@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.CategoryMapper">
+    <sql id="columns">
+        id,name,image_url,parent_id,status,order_num,create_time,update_time,is_deleted
+    </sql>
+
+    <!--    List<Category> findCategoriesByParentId(Long parentId);  -->
+    <select id="findCategoriesByParentId" resultType="com.koko.spzx.model.entity.product.Category">
+        SELECT
+        <include refid="columns"/>
+        FROM `category`
+        WHERE parent_id=#{parentId} and is_deleted=0
+        ORDER BY id DESC
+    </select>
+
+    <!--     int countCategoriesByParentId(Long parentId); -->
+    <select id="countCategoriesByParentId" resultType="_int">
+        SELECT COUNT(1)
+        FROM `category`
+        WHERE parent_id=#{parentId} and is_deleted=0
+    </select>
+
+    <!--  List<Category> findAllCategories();  -->
+    <select id="findAllCategories" resultType="com.koko.spzx.model.entity.product.Category">
+        SELECT
+        <include refid="columns"/>
+        FROM `category`
+        WHERE is_deleted=0
+    </select>
+
+    <!--      int batchInsertCategories(List<Category> cacheList);  -->
+    <insert id="batchInsertCategories">
+        INSERT INTO category
+        (
+        name,
+        image_url,
+        parent_id,
+        status,
+        order_num
+        )
+        VALUES
+        <foreach collection="cacheList" item="item" separator=",">
+            (#{item.name}, #{item.imageUrl}, #{item.parentId}, #{item.status}, #{item.orderNum})
+        </foreach>
+    </insert>
+
+</mapper>

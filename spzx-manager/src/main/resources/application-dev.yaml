@@ -65,7 +65,7 @@ logging:
     org.apache.ibatis: TRACE
     # 输出 SQL 语句和参数的 DEBUG 级别日志
     java.sql: DEBUG
-    com.example.mapper: DEBUG
+    com.koko.spzx.mapper: DEBUG
 
 
 

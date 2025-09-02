@@ -15,13 +15,16 @@ import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.entity.system.SysUser;
 import com.koko.spzx.model.vo.common.ResultCodeEnum;
 import com.koko.spzx.model.vo.system.LoginVo;
+import com.koko.spzx.model.vo.system.SysMenuVo;
 import com.koko.spzx.service.SysUserService;
+import com.koko.spzx.util.AuthContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -197,6 +200,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
+    /* 删除用户 */
     @Override
     public void delete(Long UserId) {
         int delete = mapper.delete(UserId);
@@ -204,5 +208,8 @@ public class SysUserServiceImpl implements SysUserService {
             throw new SysUserException(ResultCodeEnum.SYSTEM_ERROR);
         }
     }
+
+
+    /* -------------------------------------------------------------- */
 
 }
