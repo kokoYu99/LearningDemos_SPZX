@@ -60,4 +60,16 @@ public class CategoryBrandServiceImpl implements CategoryBrandService {
             throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
         }
     }
+
+    /*
+    商品管理页，
+    根据分类id，查询品牌
+    */
+    @Override
+    public List<Brand> findBrandByCategoryId(Long categoryId) {
+        List<Brand> brandList = mapper.findBrandByCategoryId(categoryId);
+        return brandList;
+    }
+
+
 }

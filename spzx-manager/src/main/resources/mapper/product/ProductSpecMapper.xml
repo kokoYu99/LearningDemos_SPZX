@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.ProductSpecMapper">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        id, spec_name, spec_value, create_time, update_time, is_deleted
+    </sql>
+
+    <!--   List<ProductSpec> findAllProductSpecs();  -->
+    <select id="findAllProductSpecs" resultType="com.koko.spzx.model.entity.product.ProductSpec">
+        SELECT
+        <include refid="columns"/>
+        FROM `product_spec`
+        WHERE is_deleted=0
+        ORDER BY id DESC
+    </select>
+
+    <!--     int insertProductSpec(ProductSpec productSpec);  -->
+    <insert id="insertProductSpec">
+        INSERT INTO `product_spec`(spec_name, spec_value) VALUES (#{specName}, #{specValue})
+    </insert>
+
+    <!--  int updateProductSpecById(ProductSpec productSpec);  -->
+    <update id="updateProductSpecById">
+        UPDATE `product_spec`
+        <set>
+            <if test="specName!=null and specName!=''">
+                spec_name=#{specName},
+            </if>
+            <if test="specValue!=null and specValue!=''">
+                spec_value=#{specValue},
+            </if>
+            update_time=NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <!--  int deleteProductSpecById(Long id);  -->
+    <update id="deleteProductSpecById">
+        UPDATE `product_spec`
+        SET is_deleted=1, update_time=NOW()
+        WHERE id=#{id}
+    </update>
+
+</mapper>

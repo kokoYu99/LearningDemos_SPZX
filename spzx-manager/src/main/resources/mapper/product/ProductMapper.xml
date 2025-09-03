@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.ProductMapper">
+
+    <!-- product表的字段 -->
+    <sql id="columns">
+        p.name, p.brand_id, p.category1_id, p.category2_id, p.category3_id, p.unit_name,
+        p.slider_urls, p.spec_value, p.status, p.audit_status, p.audit_message
+    </sql>
+
+    <!-- 按照品牌id和分类id查询产品。
+    根据Product实体类的属性，需要查询出：1.product信息 2.brandName 3. categoryName(3级)
+    List<Product> findProducts(ProductDto productDto);-->
+    <select id="findProducts" resultType="com.koko.spzx.model.entity.product.Product">
+        SELECT
+        <include refid="columns"/>,
+        b.name AS brandName,
+        c1.name AS category1Name,
+        c2.name AS category2Name,
+        c3.name AS category3Name
+        FROM `product` p
+        JOIN `brand` b ON p.brand_id=b.id
+        JOIN `category` c1 ON p.category1_id=c1.id
+        JOIN `category` c2 ON p.category2_id=c2.id
+        JOIN `category` c3 ON p.category3_id=c3.id
+        <where>
+            <if test="brandId != null and brandId != ''">
+                p.brand_id=#{brandId} and
+            </if>
+            <if test="category1Id != null and category1Id != ''">
+                p.category1_id=#{category1Id} and
+            </if>
+
+            <if test="category2Id != null and category2Id != ''">
+                p.category2_id=#{category2Id} and
+            </if>
+
+            <if test="category3Id != null and category3Id != ''">
+                p.category3_id=#{category3Id} and
+            </if>
+            p.is_deleted=0
+        </where>
+        ORDER BY p.id DESC
+    </select>
+
+
+</mapper>

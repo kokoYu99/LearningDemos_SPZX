@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.ProductUnitMapper">
+    <!--List<ProductUnit> findAllProductUnits();-->
+    <select id="findAllProductUnits" resultType="com.koko.spzx.model.entity.base.ProductUnit">
+        SELECT name
+        FROM `product_unit`
+        WHERE is_deleted=0
+        ORDER BY id DESC
+    </select>
+
+</mapper>

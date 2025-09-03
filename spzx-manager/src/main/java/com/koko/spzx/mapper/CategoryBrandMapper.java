@@ -1,6 +1,7 @@
 package com.koko.spzx.mapper;
 
 import com.koko.spzx.model.dto.product.CategoryBrandDto;
+import com.koko.spzx.model.entity.product.Brand;
 import com.koko.spzx.model.entity.product.CategoryBrand;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +17,6 @@ public interface CategoryBrandMapper {
     int updateCategoryBrandById(CategoryBrand categoryBrand);
 
     int deleteCategoryBrandById(Long id);
+
+    List<Brand> findBrandByCategoryId(Long categoryId);
 }

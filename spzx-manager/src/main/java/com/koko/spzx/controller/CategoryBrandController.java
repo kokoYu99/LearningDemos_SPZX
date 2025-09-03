@@ -2,11 +2,14 @@ package com.koko.spzx.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.koko.spzx.model.dto.product.CategoryBrandDto;
+import com.koko.spzx.model.entity.product.Brand;
 import com.koko.spzx.model.entity.product.CategoryBrand;
 import com.koko.spzx.model.vo.common.Result;
 import com.koko.spzx.model.vo.common.ResultCodeEnum;
 import com.koko.spzx.service.CategoryBrandService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin/product/categoryBrand")
@@ -43,5 +46,15 @@ public class CategoryBrandController {
     public Result deleteCategoryBrandById(@PathVariable Long id) {
         service.deleteCategoryBrandById(id);
         return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    /*
+    商品管理页，
+    根据分类id，查询品牌
+    */
+    @GetMapping("/findBrandByCategoryId/{categoryId}")
+    public Result findBrandByCategoryId(@PathVariable Long categoryId) {
+        List<Brand> brandList = service.findBrandByCategoryId(categoryId);
+        return Result.build(brandList, ResultCodeEnum.SUCCESS);
     }
 }
