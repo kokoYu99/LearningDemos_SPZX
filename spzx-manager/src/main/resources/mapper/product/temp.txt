@@ -1,0 +1,8 @@
+        name, brand_id,
+        category1_id, category2_id, category3_id,
+        unit_name,
+        slider_urls,
+        spec_value,
+        status,
+        audit_status,
+        audit_message

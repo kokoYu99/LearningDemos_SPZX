@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koko.spzx.mapper.ProductDetailsMapper">
+
+    <!--      int updateDetails(ProductDetails productDetails);  -->
+    <update id="updateDetails">
+        UPDATE `product_details`
+        <set>
+            <if test="productId!=null and productId!=''">
+                product_id=#{productId},
+            </if>
+            <if test="imageUrls!=null and imageUrls!=''">
+                image_urls=#{imageUrls},
+            </if>
+            update_time=NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+
+    <!--      ProductDetails findDetailsByProductId(Long productId);  -->
+    <select id="findDetailsByProductId" resultType="com.koko.spzx.model.entity.product.ProductDetails">
+        SELECT id, product_id, image_urls
+        FROM `product_details`
+        WHERE product_id=#{productId} and is_deleted=0
+    </select>
+
+
+    <!--    int insertDetails(ProductDetails productDetails);-->
+    <insert id="insertDetails" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `product_details`
+        (product_id, image_urls)
+        VALUES
+        (#{productId}, #{imageUrls})
+    </insert>
+
+
+</mapper>

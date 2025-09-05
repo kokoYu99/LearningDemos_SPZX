@@ -43,6 +43,9 @@ public class Product extends BaseEntity {
 	@Schema(description = "审核信息")
 	private String auditMessage;			// 审核信息
 
+
+
+
 	// 扩展的属性，用来封装响应的数据
 	@Schema(description = "品牌名称")
 	private String brandName;				// 品牌
