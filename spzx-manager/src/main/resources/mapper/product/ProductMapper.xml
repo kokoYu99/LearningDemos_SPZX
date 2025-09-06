@@ -17,6 +17,15 @@
         p.audit_message
     </sql>
 
+
+    <!--     int deleteProductById(Long productId);  -->
+    <update id="deleteProductById">
+        UPDATE product
+        SET is_deleted=1 , update_time=NOW()
+        WHERE id=#{productId}
+    </update>
+
+
     <!--    int updateProduct(Product product);  -->
     <update id="updateProduct">
         UPDATE product
@@ -62,7 +71,7 @@
 
     <!-- 修改商品数据前，回显数据 -->
     <select id="findProductById" resultType="com.koko.spzx.model.entity.product.Product">
-        SELECT <include refid="columns"/>,
+        SELECT<include refid="columns"/>,
         b.name AS brandName,
         c1.name AS category1Name,
         c2.name AS category2Name,

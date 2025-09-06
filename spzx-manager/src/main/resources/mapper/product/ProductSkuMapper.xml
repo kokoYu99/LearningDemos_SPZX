@@ -5,6 +5,15 @@
 
 <mapper namespace="com.koko.spzx.mapper.ProductSkuMapper">
 
+
+    <!--    int deleteSkuByProductId(Long productId);  -->
+    <update id="deleteSkuByProductId">
+        UPDATE `product_sku`
+        SET is_deleted=1 , update_time=NOW()
+        WHERE product_id=#{productId}
+    </update>
+
+
     <!--   int updateSku(ProductSku sku);  -->
     <update id="updateSku">
         UPDATE `product_sku`

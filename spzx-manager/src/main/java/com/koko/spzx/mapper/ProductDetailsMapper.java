@@ -12,4 +12,5 @@ public interface ProductDetailsMapper {
 
     int insertDetails(ProductDetails productDetails);
 
+    int deleteDetailsByProductId(Long productId);
 }

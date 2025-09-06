@@ -14,7 +14,10 @@ public enum ResultCodeEnum {
     USER_NAME_IS_EXISTS(209, "用户名已经存在"),
     ACCOUNT_STOP(216, "账号已停用"),
     NODE_ERROR(217, "该节点下有子节点，不可以删除"),
+
     STOCK_LESS(219, "库存不足"),
+    PRODUCT_NOT_FOUND(220,"商品不存在"),
+
     SYSTEM_ERROR(9999, "系统故障，请稍后再试"),
 
     ;

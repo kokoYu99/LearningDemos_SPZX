@@ -37,9 +37,97 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
+    /* 修改商品审核状态和审核信息 */
+    @Override
+    public void updateAuditStatus(Long id, Integer auditStatus) {
+
+        /* 方式1. 先从数据库获取product对象，设置审核状态，再传回数据库，进行修改
+         * 注：这样比方式2更安全，降低了数据覆盖风险
+         */
+        Product product = productMapper.findProductById(id);
+        if (product == null) {
+            throw new BusinessException(ResultCodeEnum.PRODUCT_NOT_FOUND);
+        }
+        //如果审核状态没有改变，就无需修改
+        if (product.getAuditStatus().equals(auditStatus)) {
+            return;
+        }
+        //审核状态改变了，进行修改
+        product.setAuditStatus(auditStatus);
+        product.setAuditMessage(auditStatus == 1 ? "审批通过" : "审批不通过");
+
+
+        /* 方式2. 新建product对象，再传给数据库，进行修改 */
+//        //创建product对象
+//        Product product = new Product();
+//        //用前端传入的数据赋值
+//        product.setAuditStatus(auditStatus);
+//        product.setAuditMessage(auditStatus == 1 ? "审批通过" : "审批不通过");
+
+
+        //将修改后的对象传给数据库
+        int i = productMapper.updateProduct(product);
+        if (i != 1) {
+            throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+
+    }
+
+
+    /* 修改商品上下架状态 */
+    @Override
+    public void updateAvailableStatus(Long id, Integer status) {
+
+        /* 先从数据库获取product对象，设置审核状态，再传回数据库，进行修改 */
+        Product product = productMapper.findProductById(id);
+        if (product == null) {
+            throw new BusinessException(ResultCodeEnum.PRODUCT_NOT_FOUND);
+        }
+        //如果上下架状态没有改变，就无需修改
+        if (product.getStatus().equals(status)) {
+            return;
+        }
+        product.setStatus(status);
+
+        //将修改后的对象传给数据库
+        int i = productMapper.updateProduct(product);
+        if (i != 1) {
+            throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+    }
+
+
+    /* 删除商品数据，三张表对应的数据 */
+    @Transactional(
+            timeout = 5, //超时时间
+            rollbackFor = {SQLException.class, BusinessException.class}, //遇到这些异常，就回滚。运行时异常默认会回滚
+            isolation = READ_COMMITTED, //隔离级别：读已提交
+            propagation = Propagation.REQUIRED) //传播行为：调用者有事务就加入，无事务就单独开事务(默认)
+    @Override
+    public void deleteProductById(Long productId) {
+        //删除product表的数据，根据id
+        int i = productMapper.deleteProductById(productId);
+        if (i != 1) {
+            throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+
+        //删除sku表的数据，根据product_id
+        int j = skuMapper.deleteSkuByProductId(productId);
+        if (j < 1) { //一个商品至少有一个sku
+            throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+
+        //删除details表的数据，根据product_id
+        int k = detailsMapper.deleteDetailsByProductId(productId);
+        if (k != 1) {
+            throw new BusinessException(ResultCodeEnum.SYSTEM_ERROR);
+        }
+    }
+
+
     /* 修改商品数据 */
     @Transactional(
-            timeout = 5, //超时时间10s
+            timeout = 5, //超时时间
             rollbackFor = {SQLException.class, BusinessException.class}, //遇到这些异常，就回滚。运行时异常默认会回滚
             isolation = READ_COMMITTED, //隔离级别：读已提交
             propagation = Propagation.REQUIRED) //传播行为：调用者有事务就加入，无事务就单独开事务(默认)
@@ -65,9 +153,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
         /* 修改商品详情信息 */
-        //product中没有完整的details对象，先从数据库获取
+        //product中没有完整的details对象，先根据product_id从数据库获取
         ProductDetails productDetails = detailsMapper.findDetailsByProductId(product.getId());
-        //从product中获取imageUrl，赋给details对象
+        //修改其imageUrls的值
         productDetails.setImageUrls(product.getDetailsImageUrls());
         //保存修改后的details对象
         int k = detailsMapper.updateDetails(productDetails);
@@ -100,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
 
     /* 保存商品信息  */
     @Transactional(
-            timeout = 5, //超时时间10s
+            timeout = 5, //超时时间
             rollbackFor = {SQLException.class, BusinessException.class}, //遇到这些异常，就回滚。运行时异常默认会回滚
             isolation = READ_COMMITTED, //隔离级别：读已提交
             propagation = Propagation.REQUIRED) //传播行为：调用者有事务就加入，无事务就单独开事务(默认)

@@ -36,16 +36,38 @@ public class ProductController {
 
     /* 查询商品信息，根据id */
     @GetMapping("/getById/{id}")
-    public Result findProductById(@PathVariable Long id){
+    public Result findProductById(@PathVariable Long id) {
         Product product = service.findProductById(id);
         return Result.build(product, ResultCodeEnum.SUCCESS);
     }
 
     /* 修改商品信息 */
     @PutMapping("/updateById")
-    public Result updateProductById(@RequestBody Product product){
+    public Result updateProductById(@RequestBody Product product) {
         service.updateProductInfo(product);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
+
+    /* 删除商品信息 */
+    @DeleteMapping("/deleteById/{id}")
+    public Result deleteProductById(@PathVariable Long id) {
+        service.deleteProductById(id);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    /* 修改商品审核状态和审核信息 */
+    @PutMapping("/updateAuditStatus/{id}/{auditStatus}")
+    public Result updateAuditStatus(@PathVariable Long id, @PathVariable Integer auditStatus) {
+        service.updateAuditStatus(id, auditStatus);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    /* 修改商品上下架状态 */
+    @PutMapping("/updateStatus/{id}/{status}")
+    public Result updateAvailableStatus(@PathVariable Long id, @PathVariable Integer status) {
+        service.updateAvailableStatus(id, status);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
 
 }

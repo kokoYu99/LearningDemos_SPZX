@@ -14,12 +14,6 @@ import static org.springframework.transaction.annotation.Isolation.READ_COMMITTE
 
 public interface ProductService {
 
-    /* 修改商品数据 */
-    @Transactional(
-            timeout = 5, //超时时间10s
-            rollbackFor = {SQLException.class, BusinessException.class}, //遇到这些异常，就回滚。运行时异常默认会回滚
-            isolation = READ_COMMITTED, //隔离级别：读已提交
-            propagation = Propagation.REQUIRED) //传播行为：调用者有事务就加入，无事务就单独开事务(默认)
     void updateProductInfo(Product product);
 
     Product findProductById(Long id);
@@ -29,4 +23,9 @@ public interface ProductService {
     PageInfo findProductByPage(Integer pageNum, Integer pageSize, ProductDto productDto);
 
 
+    void deleteProductById(Long productId);
+
+    void updateAuditStatus(Long id, Integer auditStatus);
+
+    void updateAvailableStatus(Long id, Integer status);
 }
